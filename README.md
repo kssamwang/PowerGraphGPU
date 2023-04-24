@@ -2,56 +2,79 @@
 
 This project is used to provide a generalizable GPU computation acceleration framework for distributed graph processing system.
 
-## Building
+This project is forked by [cave-g-f](https://github.com/cave-g-f/PowerGraph-GPU)
 
-The current version of GraphLab PowerGraph was tested on Ubuntu Linux 64-bit 10.04,  11.04 (Natty), 12.04 (Pangolin) as well as Mac OS X 10.7 (Lion) and Mac OS X 10.8 (Mountain Lion). It requires a 64-bit operating system.
+## Building Environment
 
-# Dependencies
+Tencent Cloud Server Ubuntu18.04
+
+NVIDIA ARCH ：Volt (V100)
+
+NVIDIA-SMI 450.102.04
+
+CUDA Version: 10.0
+
+CUDNN Version: 7.5.0
+
+## Dependencies
 
 To simplify installation, GraphLab PowerGraph currently downloads and builds most of its required dependencies using CMake’s External Project feature. This also means the first build could take a long time.
 
 There are however, a few dependencies which must be manually satisfied.
 
-* On OS X: g++ (>= 4.2) or clang (>= 3.0) [Required]
-  +  Required for compiling GraphLab.
+These are dependencies on Ubuntu 18.04.If you use 20.04 or higher version,please downgrade version of these software dependencies.
 
-* On Linux: g++ (>= 4.3) or clang (>= 3.0) [Required]
-  +  Required for compiling GraphLab.
+```sh
+$ cat /etc/apt/sources.list
+deb http://mirrors.tencentyun.com/ubuntu/ bionic main restricted universe multiverse
+deb http://mirrors.tencentyun.com/ubuntu/ bionic-security main restricted universe multiverse
+deb http://mirrors.tencentyun.com/ubuntu/ bionic-updates main restricted universe multiverse
+#deb http://mirrors.tencentyun.com/ubuntu/ bionic-proposed main restricted universe multiverse
+#deb http://mirrors.tencentyun.com/ubuntu/ bionic-backports main restricted universe multiverse
+deb-src http://mirrors.tencentyun.com/ubuntu/ bionic main restricted universe multiverse
+deb-src http://mirrors.tencentyun.com/ubuntu/ bionic-security main restricted universe multiverse
+deb-src http://mirrors.tencentyun.com/ubuntu/ bionic-updates main restricted universe multiverse
+#deb-src http://mirrors.tencentyun.com/ubuntu/ bionic-proposed main restricted universe multiverse
+#deb-src http://mirrors.tencentyun.com/ubuntu/ bionic-backports main restricted universe multiverse
+sudo apt-get update
+sudo apt-get install gcc g++ build-essential libopenmpi-dev openmpi-bin default-jdk cmake zlib1g-dev git
+```
 
-* *nix build tools: patch, make [Required]
-   +  Should come with most Mac/Linux systems by default. Recent Ubuntu version will require to install the build-essential package.
-
-* zlib [Required]
-   +   Comes with most Mac/Linux systems by default. Recent Ubuntu version will require the zlib1g-dev package.
-
-* Open MPI or MPICH2 [Strongly Recommended]
-   + Required for running GraphLab distributed. 
-
-* JDK 6 or greater [Optional]
-   + Required for HDFS support 
-
-## Satisfying Dependencies on Mac OS X
-
-Installing XCode with the command line tools (in XCode 4.3 you have to do this manually in the XCode Preferences -&gt; Download pane), satisfies all of these dependencies.
-
-## Satisfying Dependencies on Ubuntu
-
-All the dependencies can be satisfied from the repository:
-
-    sudo apt-get update
-    sudo apt-get install gcc g++ build-essential libopenmpi-dev openmpi-bin default-jdk cmake zlib1g-dev git
-
-# Downloading GraphLab PowerGraph
-
-You can download GraphLab PowerGraph directly from the Github Repository. Github also offers a zip download of the repository if you do not have git.
-
-The git command line for cloning the repository is:
-
-    git clone https://github.com/graphlab-code/graphlab.git
-    cd graphlab
+```
+$ apt list --installed | grep gcc
+gcc/bionic-security,bionic-updates,now 4:7.4.0-1ubuntu2.3 amd64 [installed]
+gcc-7/bionic-security,bionic-updates,now 7.5.0-3ubuntu1~18.04 amd64 [installed,automatic]
+gcc-7-base/bionic-security,bionic-updates,now 7.5.0-3ubuntu1~18.04 amd64 [installed,automatic]
+gcc-8-base/bionic-security,bionic-updates,now 8.4.0-1ubuntu1~18.04 amd64 [installed]
+libgcc-7-dev/bionic-security,bionic-updates,now 7.5.0-3ubuntu1~18.04 amd64 [installed,automatic]
+libgcc1/bionic-security,bionic-updates,now 1:8.4.0-1ubuntu1~18.04 amd64 [installed]
+$ apt list --installed | grep g++
+g++/bionic-security,bionic-updates,now 4:7.4.0-1ubuntu2.3 amd64 [installed]
+g++-7/bionic-security,bionic-updates,now 7.5.0-3ubuntu1~18.04 amd64 [installed,automatic]
+$ apt list --installed | grep build-essential
+build-essential/bionic,now 12.4ubuntu1 amd64 [installed]
+$ apt list --installed | grep libopenmpi-dev
+libopenmpi-dev/bionic,now 2.1.1-8 amd64 [installed]
+$ apt list --installed | grep openmpi-bin
+openmpi-bin/bionic,now 2.1.1-8 amd64 [installed]
+$ apt list --installed | grep default-jdk
+default-jdk/bionic-security,bionic-updates,now 2:1.11-68ubuntu1~18.04.1 amd64 [installed]
+default-jdk-headless/bionic-security,bionic-updates,now 2:1.11-68ubuntu1~18.04.1 amd64 [installed,automatic]
+$ apt list --installed | grep cmake
+cmake/bionic-updates,now 3.10.2-1ubuntu2.18.04.2 amd64 [installed]
+cmake-data/bionic-updates,bionic-updates,now 3.10.2-1ubuntu2.18.04.2 all [installed,automatic]
+$ apt list --installed | grep zlib1g-dev
+zlib1g-dev/bionic-security,bionic-updates,now 1:1.2.11.dfsg-0ubuntu2.2 amd64 [installed]
+```
 
 
-# Compiling and Running
+## Compiling and Running
+
+Build all:
+
+```
+./configure && ./autoBuild.sh
+```
 
 ```
 ./configure
@@ -75,13 +98,3 @@ make -j4
 ```
 
 will build only the Graph Analytics toolkit and will not need to obtain OpenCV, Eigen, etc used by the other toolkits.
-
-## Compilation Issues
-If you encounter issues please post the following on the [GraphLab forum](http://forum.graphlab.com).
-
-* detailed description of the problem you are facing
-* OS and OS version
-* output of uname -a
-* hardware of the machine
-* utput of g++ -v and clang++ -v
-* contents of graphlab/config.log and graphlab/configure.deps
