@@ -22,7 +22,9 @@ To simplify installation, GraphLab PowerGraph currently downloads and builds mos
 
 There are however, a few dependencies which must be manually satisfied.
 
-These are dependencies on Ubuntu 18.04.If you use 20.04 or higher version,please downgrade version of these software dependencies.
+These are dependencies on Ubuntu 18.04.
+
+If you use 20.04 or higher version,please downgrade version of these software dependencies.
 
 ```sh
 $ cat /etc/apt/sources.list
@@ -36,11 +38,18 @@ deb-src http://mirrors.tencentyun.com/ubuntu/ bionic-security main restricted un
 deb-src http://mirrors.tencentyun.com/ubuntu/ bionic-updates main restricted universe multiverse
 #deb-src http://mirrors.tencentyun.com/ubuntu/ bionic-proposed main restricted universe multiverse
 #deb-src http://mirrors.tencentyun.com/ubuntu/ bionic-backports main restricted universe multiverse
-sudo apt-get update
-sudo apt-get install gcc g++ build-essential libopenmpi-dev openmpi-bin default-jdk cmake zlib1g-dev git
 ```
 
+To install them:
+
+```sh
+$ sudo apt-get update
+$ sudo apt-get install gcc g++ build-essential libopenmpi-dev openmpi-bin default-jdk cmake zlib1g-dev git
 ```
+
+Version details:
+
+```sh
 $ apt list --installed | grep gcc
 gcc/bionic-security,bionic-updates,now 4:7.4.0-1ubuntu2.3 amd64 [installed]
 gcc-7/bionic-security,bionic-updates,now 7.5.0-3ubuntu1~18.04 amd64 [installed,automatic]
@@ -70,13 +79,15 @@ zlib1g-dev/bionic-security,bionic-updates,now 1:1.2.11.dfsg-0ubuntu2.2 amd64 [in
 
 ## Compiling and Running
 
-Build all:
+### Build once
 
-```
+```sh
 ./configure && ./autoBuild.sh
 ```
 
-```
+### Build step by step
+
+```sh
 ./configure
 ```
 
@@ -84,7 +95,7 @@ In the graphlabapi directory, will create two sub-directories, release/ and debu
 
 We recommend using make’s parallel build feature to accelerate the compilation process. For instance:
 
-```
+```sh
 make -j4
 ```
 
@@ -92,7 +103,7 @@ will perform up to 4 build tasks in parallel. When building in release/ mode, Gr
 
 Alternatively, if you know exactly which toolkit you want to build, cd into the toolkit’s sub-directory and running make, will be significantly faster as it will only download the minimal set of dependencies for that toolkit. For instance:
 
-```
+```sh
 cd release/toolkits/graph_analytics
 make -j4
 ```
